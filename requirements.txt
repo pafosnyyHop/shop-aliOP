@@ -5,3 +5,6 @@ psycopg2-binary
 drf-yasg
 django-filter
 dj-rest-auth
+decouple
+rest
+djangorestframework-simplejwt
