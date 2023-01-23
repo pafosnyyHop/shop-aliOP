@@ -26,11 +26,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-<<<<<<< HEAD
-DEBUG = config('DEBUG')
-=======
+
 DEBUG = config('DEBUG', cast=bool)
->>>>>>> 319e0665567128ebcf0dda0bd7320bfd543ab052
+
+
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(' ')
 
@@ -104,7 +103,6 @@ DATABASES = {
 
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
