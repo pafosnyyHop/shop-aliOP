@@ -3,8 +3,6 @@ from review.models import Review, ReviewImages
 
 
 class ReviewImageSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.id')
-    owner_username = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
         model = ReviewImages
@@ -13,10 +11,12 @@ class ReviewImageSerializer(serializers.ModelSerializer):
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
     images = ReviewImageSerializer(many=True, read_only=False, required=False)
+    owner = serializers.ReadOnlyField(source='owner.id')
+    owner_username = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
         model = Review
-        fields = ('id', 'body', 'images')
+        fields = ('id', 'body', 'images', 'owner', 'owner_username')
 
     def create(self, validated_data):
         request = self.context.get('request')

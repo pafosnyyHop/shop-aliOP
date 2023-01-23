@@ -15,7 +15,7 @@ class ProductListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('owner', 'title', 'price', 'stock', 'preview', 'images')
+        fields = ('owner', 'title', 'price', 'stock', 'preview', 'images', 'owner_email')
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -24,6 +24,12 @@ class ProductListSerializer(serializers.ModelSerializer):
         for image in images_data:
             ProductImages.objects.create(image=image, product=product)
         return product
+
+    def to_representation(self, instance):
+        repr = super().to_representation(instance)
+        repr['images'] = ProductImageSerializer(instance.images.all(), many=True).data
+
+        return repr
 
 
 class ProductSerializer(serializers.ModelSerializer):
