@@ -9,7 +9,9 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import os
+from decouple import config
+from datetime import timedelta
 from pathlib import Path
 from decouple import config
 
@@ -24,7 +26,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+<<<<<<< HEAD
 DEBUG = config('DEBUG')
+=======
+DEBUG = config('DEBUG', cast=bool)
+>>>>>>> 319e0665567128ebcf0dda0bd7320bfd543ab052
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(' ')
 
@@ -50,6 +56,7 @@ INSTALLED_APPS = [
     'review',
     'product',
     'category',
+    'account',
 ]
 
 MIDDLEWARE = [
@@ -93,8 +100,7 @@ DATABASES = {
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
         'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT'),
-
+        'PORT': config('DB_PORT', cast=int),
 
     }
 }
