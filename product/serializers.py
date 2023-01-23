@@ -10,7 +10,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 
 class ProductListSerializer(serializers.ModelSerializer):
-    # owner_email = serializers.ReadOnlyField(source='owner.email')
+    owner_email = serializers.ReadOnlyField(source='owner.email')
     images = ProductImageSerializer(many=True, read_only=False, required=False)
 
     class Meta:
@@ -27,8 +27,8 @@ class ProductListSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    # owner_email = serializers.ReadOnlyField(source='owner.email')
-    # owner = serializers.ReadOnlyField(source='owner.id')
+    owner_email = serializers.ReadOnlyField(source='owner.email')
+    owner = serializers.ReadOnlyField(source='owner.id')
 
     class Meta:
         model = Product

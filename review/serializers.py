@@ -3,8 +3,8 @@ from review.models import Review, ReviewImages
 
 
 class ReviewImageSerializer(serializers.ModelSerializer):
-    # owner = serializers.ReadOnlyField(source='owner.id')
-    # owner_username = serializers.ReadOnlyField(source='owner.username')
+    owner = serializers.ReadOnlyField(source='owner.id')
+    owner_username = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
         model = ReviewImages
