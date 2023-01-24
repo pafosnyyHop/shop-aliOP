@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from category.models import Category
 from .models import Product, ProductImages
+from review.serializers import ReviewCreateSerializer
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -9,13 +10,14 @@ class ProductImageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ProductListSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
     owner_email = serializers.ReadOnlyField(source='owner.email')
+    owner = serializers.ReadOnlyField(source='owner.id')
     images = ProductImageSerializer(many=True, read_only=False, required=False)
 
     class Meta:
         model = Product
-        fields = ('owner', 'title', 'price', 'stock', 'preview', 'images', 'owner_email')
+        fields = '__all__'
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -28,17 +30,22 @@ class ProductListSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         repr = super().to_representation(instance)
         repr['images'] = ProductImageSerializer(instance.images.all(), many=True).data
+        repr['reviews'] = ReviewCreateSerializer(instance.reviews.all(), many=True).data
 
         return repr
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductListSerializer(serializers.ModelSerializer):
     owner_email = serializers.ReadOnlyField(source='owner.email')
-    owner = serializers.ReadOnlyField(source='owner.id')
 
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = ('id', 'owner', 'title', 'price', 'preview', 'owner_email')
+
+
+
+
+
 
 
 
