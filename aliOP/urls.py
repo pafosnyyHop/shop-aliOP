@@ -23,6 +23,8 @@ from django.conf import settings
 from rest_framework.routers import SimpleRouter
 from category.views import CategoryViewSet
 from product.views import ProductViewSet
+from likes.views import LikeCreateView
+from likes.views import LikeDeleteView
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -49,6 +51,8 @@ urlpatterns = [
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('docs/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('likes/', LikeCreateView.as_view()),
+    path('likes/<int:pk>/', LikeDeleteView.as_view()),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
