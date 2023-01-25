@@ -14,7 +14,7 @@ class ProductSerializer(serializers.ModelSerializer):
     owner_email = serializers.ReadOnlyField(source='owner.email')
     owner = serializers.ReadOnlyField(source='owner.id')
     images = ProductImageSerializer(many=True, read_only=False, required=False)
-    # ratings = serializers.SerializerMethodField('get_ratings_detail')
+    ratings = serializers.SerializerMethodField('get_ratings_detail')
 
     class Meta:
         model = Product
