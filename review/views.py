@@ -1,14 +1,15 @@
 from rest_framework import generics, permissions, mixins
-from .models import Review
 from rest_framework.generics import GenericAPIView
+
+from .models import Review
 from . import serializers
 from .permissions import IsAuthorOrAdminOrPostOwner
 from product.permissions import IsAuthor
 
 
-class CustomUpdateDestroy(mixins.UpdateModelMixin,
-                          mixins.DestroyModelMixin,
-                          GenericAPIView):
+class CustomUpdateDestroyAPIView(mixins.UpdateModelMixin,
+                                 mixins.DestroyModelMixin,
+                                 GenericAPIView):
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
@@ -28,7 +29,7 @@ class ReviewCreateView(generics.ListCreateAPIView):
         serializer.save(owner=self.request.user)
 
 
-class ReviewDetailView(CustomUpdateDestroy):
+class ReviewDetailView(CustomUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = serializers.ReviewCreateSerializer
 
