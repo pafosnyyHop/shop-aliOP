@@ -14,6 +14,7 @@ class ProductSerializer(serializers.ModelSerializer):
     owner_email = serializers.ReadOnlyField(source='owner.email')
     owner = serializers.ReadOnlyField(source='owner.id')
     images = ProductImageSerializer(many=True, read_only=False, required=False)
+    # ratings = serializers.SerializerMethodField('get_ratings_detail')
 
     class Meta:
         model = Product
@@ -33,6 +34,14 @@ class ProductSerializer(serializers.ModelSerializer):
         repr['reviews'] = ReviewCreateSerializer(instance.reviews.all(), many=True).data
 
         return repr
+
+    def get_ratings_detail(self, obj):
+        ratings = Rating.objects.filter(product=obj)
+
+        from collections import Counter
+
+        ratings = Counter(ratings.values_list("rating", flat=True))
+        return ratings
 
 
 class ProductListSerializer(serializers.ModelSerializer):
