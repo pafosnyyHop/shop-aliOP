@@ -4,7 +4,9 @@ from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
+from rest_framework.response import Response
 
+from favorites.models import Favorites
 from .models import Product
 from . import serializers
 from product.permissions import IsAuthor
@@ -35,3 +37,19 @@ class ProductViewSet(ModelViewSet):
         if self.action in ('update', 'partial_update', 'destroy'):
             return [permissions.IsAuthenticated(), IsAuthor(), permissions.IsAdminUser()]
         return [permissions.IsAuthenticatedOrReadOnly()]
+
+    @action(['POST', 'DELETE'], detail=True)
+    def favorites(self, request, pk):
+        product = self.get_object()
+        user = request.user
+        if request.method == 'POST':
+            if user.favorites.filter(product=product).exists():
+                return Response('This product is already in favorites!',
+                                status=400)
+            Favorites.objects.create(owner=user, product=product)
+            return Response('Added to favorites!', status=201)
+        else:
+            if user.favorites.filter(product=product).exists():
+                user.favorites.filter(product=product).delete()
+                return Response('Deleted from favorites!', status=204)
+            return Response('Product is not found!', status=400)

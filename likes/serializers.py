@@ -1,10 +1,11 @@
 from rest_framework import serializers
 from .models import Like
+from .models import Product
 
 
 class LikeSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.id')
-    owner_username = serializers.ReadOnlyField(source='owner.username')
+    owner_email = serializers.ReadOnlyField(source='owner.email')
 
     class Meta:
         model = Like
@@ -13,8 +14,8 @@ class LikeSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         request = self.context['request']
         user = request.user
-        product = attrs['Product']
-        if user.liked_posts.filter(Product=Product).exists():
+        product = attrs['product']
+        if user.liked_posts.filter(product=product).exists():
             raise serializers.ValidationError('You already liked this post!')
         return attrs
 
