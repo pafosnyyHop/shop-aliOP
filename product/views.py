@@ -10,6 +10,7 @@ from favorites.models import Favorites
 from .models import Product
 from . import serializers
 from product.permissions import IsAuthor
+from rating.models import Rating
 
 
 class StandartResultPagination(PageNumberPagination):
@@ -36,7 +37,7 @@ class ProductViewSet(ModelViewSet):
     def get_permissions(self):
         if self.action in ('update', 'partial_update', 'destroy'):
             return [permissions.IsAuthenticated(), IsAuthor(), permissions.IsAdminUser()]
-        return [permissions.IsAuthenticatedOrReadOnly()]
+        return [permissions.IsAuthenticated()]
 
     @action(['POST', 'DELETE'], detail=True)
     def favorites(self, request, pk):
@@ -53,3 +54,22 @@ class ProductViewSet(ModelViewSet):
                 user.favorites.filter(product=product).delete()
                 return Response('Deleted from favorites!', status=204)
             return Response('Product is not found!', status=400)
+
+    # @action(['POST', 'DELETE'], detail=True)
+    # def rating(self, request, pk):
+    #     product = self.get_object()
+    #     user = request.user
+    #
+    #     if request.method == 'POST':
+    #         Rating.objects.create(user=user, product=product)
+    #         return Response('Added to rating!', status=201)
+    #     else:
+    #         if user.user.filter(product=product).exists():
+    #             user.user.filter(product=product).delete()
+    #             return Response('Deleted from rating!', status=204)
+    #         return Response('Product is not found!', status=400)
+
+
+
+
+

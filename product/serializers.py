@@ -2,6 +2,7 @@ from rest_framework import serializers
 from category.models import Category
 from .models import Product, ProductImages
 from review.serializers import ReviewCreateSerializer
+from rating.models import Rating
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
