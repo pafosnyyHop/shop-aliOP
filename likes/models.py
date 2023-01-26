@@ -4,7 +4,7 @@ from product.models import Product
 
 class Like(models.Model):
     owner = models.ForeignKey('account.CustomUser', on_delete=models.CASCADE,
-                              related_name='liked_posts')
+                              related_name='liked_products')
     product = models.ForeignKey(Product, on_delete=models.CASCADE,
                                 related_name='likes')
 

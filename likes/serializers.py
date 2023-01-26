@@ -15,19 +15,19 @@ class LikeSerializer(serializers.ModelSerializer):
         request = self.context['request']
         user = request.user
         product = attrs['product']
-        if user.liked_posts.filter(product=product).exists():
-            raise serializers.ValidationError('You already liked this post!')
+        if user.liked_products.filter(product=product).exists():
+            raise serializers.ValidationError('You already liked this product!')
         return attrs
 
 
-class LikedPostsSerializer(serializers.ModelSerializer):
+class LikedProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
-        fields = ('id', 'Product')
+        fields = ('id', 'product')
 
     def to_representation(self, instance):
         repr = super().to_representation(instance)
-        repr['product_title'] = instance.post.title
-        preview = instance.post.preview
+        repr['product_title'] = instance.product.title
+        preview = instance.product.preview
         repr['product_preview'] = preview.url
         return repr

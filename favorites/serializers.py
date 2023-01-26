@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Favorites
 
 
-class FavoritePostsSerializer(serializers.ModelSerializer):
+class FavoriteProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorites
         fields = ('id', 'product')

@@ -4,6 +4,8 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 
+from favorites.serializers import FavoriteProductSerializer
+from likes.serializers import LikedProductSerializer
 
 User = get_user_model()
 
@@ -31,6 +33,20 @@ class RegisterSerializers(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        exclude = ('password',)
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['liked_products'] = LikedProductSerializer(
+            instance=instance.liked_products.all(), many=True).data
+        rep['favorite_products'] = FavoriteProductSerializer(instance.favorites.all(),
+                                                             many=True).data
+        user = self.context['request'].user
 
 
 class LogoutSerializer(serializers.Serializer):
