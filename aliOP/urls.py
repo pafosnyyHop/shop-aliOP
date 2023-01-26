@@ -25,6 +25,7 @@ from category.views import CategoryViewSet
 from product.views import ProductViewSet
 from likes.views import LikeCreateView
 from likes.views import LikeDeleteView
+from cart.views import OrderViewSet, OrderItemViewSet
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -42,6 +43,8 @@ schema_view = get_schema_view(
 router = SimpleRouter()
 router.register('categories', CategoryViewSet)
 router.register('products', ProductViewSet)
+router.register('order', OrderViewSet)
+router.register('order-item', OrderItemViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -53,7 +56,7 @@ urlpatterns = [
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('likes/', LikeCreateView.as_view()),
     path('likes/<int:pk>/', LikeDeleteView.as_view()),
-    path('api/v1/rating/', include('rating.urls'))
+    path('api/v1/rating/', include('rating.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

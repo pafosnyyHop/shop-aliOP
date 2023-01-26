@@ -5,9 +5,9 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 #account/__pycache__/
-#category/__pycache/
-#product/__pycache/
-#review/__pycache/
+#category/__pycache__/
+product/__pycache__/
+#review/__pycache__/
 *.py[cod]
 *$py.class
 
