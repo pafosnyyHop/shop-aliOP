@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 
 from .models import Product
 from . import serializers
-# from product.permissions import IsAuthor
+from product.permissions import IsAuthor
 
 
 class ProductViewSet(ModelViewSet):
@@ -18,7 +18,7 @@ class ProductViewSet(ModelViewSet):
             return serializers.ProductListSerializer
         return serializers.ProductSerializer
 
-    # def get_permissions(self):
-    #     if self.action in ('update', 'partial_update', 'destroy'):
-    #         return [permissions.IsAuthenticated(), IsAuthor()]
-    #     return [permissions.IsAuthenticatedOrReadOnly()]
+    def get_permissions(self):
+        if self.action in ('update', 'partial_update', 'destroy'):
+            return [permissions.IsAuthenticated(), IsAuthor(), permissions.IsAdminUser()]
+        return [permissions.IsAuthenticatedOrReadOnly()]

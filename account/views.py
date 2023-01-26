@@ -4,6 +4,8 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
+from django.contrib.auth import views
+from django.urls import reverse_lazy
 
 from . import serializers
 from .send_mail import send_confirmation_email
@@ -54,4 +56,9 @@ class LogoutView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response('Successfully logged out!', status=200)
+    
+
+class 
+
+
 
