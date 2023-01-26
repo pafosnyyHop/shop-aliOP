@@ -10,7 +10,7 @@ from favorites.models import Favorites
 from .models import Product
 from . import serializers
 from product.permissions import IsAuthor
-from rating.models import Rating
+from rating.models import Rating, RatingStar
 
 
 class StandartResultPagination(PageNumberPagination):
@@ -23,7 +23,7 @@ class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all().order_by('?')
     pagination_class = StandartResultPagination
     django_filters = (DjangoFilterBackend, SearchFilter)
-    filterset_fields = ('category', 'stock', 'price', 'owner')
+    filterset_fields = ('category', 'stock', 'price', 'owner', 'ratings')
     search_fields = ('title', 'email', 'username')
 
     def perform_create(self, serializer):
@@ -43,7 +43,7 @@ class ProductViewSet(ModelViewSet):
     def favorites(self, request, pk):
         product = self.get_object()
         user = request.user
-        if request.method == 'POST':
+        if request.method in ('POST', 'UPDATE'):
             if user.favorites.filter(product=product).exists():
                 return Response('This product is already in favorites!',
                                 status=400)
@@ -55,19 +55,6 @@ class ProductViewSet(ModelViewSet):
                 return Response('Deleted from favorites!', status=204)
             return Response('Product is not found!', status=400)
 
-    # @action(['POST', 'DELETE'], detail=True)
-    # def rating(self, request, pk):
-    #     product = self.get_object()
-    #     user = request.user
-    #
-    #     if request.method == 'POST':
-    #         Rating.objects.create(user=user, product=product)
-    #         return Response('Added to rating!', status=201)
-    #     else:
-    #         if user.user.filter(product=product).exists():
-    #             user.user.filter(product=product).delete()
-    #             return Response('Deleted from rating!', status=204)
-    #         return Response('Product is not found!', status=400)
 
 
 
