@@ -29,6 +29,17 @@ class ProductSerializer(serializers.ModelSerializer):
             ProductImages.objects.create(image=image, product=product)
         return product
 
+    def update(self, instance, validated_data):
+        request = self.context.get('request')
+        for k, v in validated_data.items():
+            setattr(instance, k, v)
+        instance.save()
+        instance.images.all().delete()
+        images_data = request.FILES.getlist('images')
+        for image in images_data:
+            ProductImages.objects.create(image=image, product=instance)
+        return product
+
     def to_representation(self, instance):
         repr = super().to_representation(instance)
         repr['images'] = ProductImageSerializer(instance.images.all(), many=True).data
