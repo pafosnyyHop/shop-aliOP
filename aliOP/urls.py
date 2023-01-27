@@ -57,6 +57,7 @@ urlpatterns = [
     path('likes/', LikeCreateView.as_view()),
     path('likes/<int:pk>/', LikeDeleteView.as_view()),
     path('api/v1/rating/', include('rating.urls')),
+    path('activate/', include('cart.urls'))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

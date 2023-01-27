@@ -26,6 +26,17 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
             ReviewImages.objects.create(image=image, review=review)
         return review
 
+    def update(self, instance, validated_data):
+        request = self.context.get('request')
+        for k, v in validated_data.items():
+            setattr(instance, k, v)
+        instance.save()
+        instance.images.all().delete()
+        images_data = request.FILES.getlist('images')
+        for image in images_data:
+            ReviewImages.objects.create(image=image, review=instance)
+        return instance
+
     def to_representation(self, instance):
         repr = super().to_representation(instance)
         repr['images'] = ReviewImageSerializer(instance.images.all(), many=True).data

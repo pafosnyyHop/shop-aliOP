@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from rest_framework import permissions
+from rest_framework import permissions, generics
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -34,8 +34,9 @@ class ActivationView(APIView):
     def get(self, request, activation_code):
         try:
             user = User.objects.get(activation_code=activation_code)
+            print(user)
             user.is_active = True
-            user.activation_code = ''
+            # user.activation_code = ''
             user.save()
             return Response({'msg': 'Successfully activated!'}, status=200)
         except User.DoesNotExist:
@@ -54,4 +55,10 @@ class LogoutView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response('Successfully logged out!', status=200)
+
+
+class UserDetailViews(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = serializers.UserDetailSerializer
+    permissions_classes = (permissions.IsAuthenticated,)
 

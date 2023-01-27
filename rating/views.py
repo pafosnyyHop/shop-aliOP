@@ -11,7 +11,7 @@ class AddStarRatingView(APIView):
     def post(self, request):
         serializer = RatingSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(user=request.user.id)
+            serializer.save(user=request.user)
             return Response(request.data, status=201)
         else:
             return Response(status=400)
