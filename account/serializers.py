@@ -3,6 +3,8 @@ from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
+from cart.serializers import OrderListSerializer
+from favorites.serializers import FavoritePostsSerializer
 
 
 User = get_user_model()
@@ -17,7 +19,7 @@ class RegisterSerializers(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'password', 'password2', 'last_name', 'first_name',
-                 'username', 'avatar')
+                  'username', 'avatar')
 
     def validate(self, attrs):
         password2 = attrs.pop('password2')
@@ -31,6 +33,21 @@ class RegisterSerializers(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        exclude = ('password',)
+
+    def is_followed(self, req_user, detail_user):
+        return req_user.followers.filter(following=detail_user).exists()
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['favorite_products'] = FavoritePostsSerializer(instance.favorites.all(), many=True).data
+        rep['order'] = OrderListSerializer(instance.userorders.all(), many=True).data
+        return rep
 
 
 class LogoutSerializer(serializers.Serializer):

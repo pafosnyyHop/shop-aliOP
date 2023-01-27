@@ -51,6 +51,8 @@ class Order(models.Model):
     telephone = models.CharField('телефон заказчика', max_length=250, null=True)
     final_price = models.IntegerField(default=1)
     paid = models.BooleanField(default=False)
+    activation_code = models.CharField(max_length=255, blank=True)
+    is_active = models.BooleanField(default=False,)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

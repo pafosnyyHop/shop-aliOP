@@ -38,7 +38,7 @@ class ProductSerializer(serializers.ModelSerializer):
         images_data = request.FILES.getlist('images')
         for image in images_data:
             ProductImages.objects.create(image=image, product=instance)
-        return product
+        return instance
 
     def to_representation(self, instance):
         repr = super().to_representation(instance)
