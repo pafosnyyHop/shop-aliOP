@@ -39,7 +39,6 @@ class LogoutSerializer(serializers.Serializer):
     default_error_messages = {'bad_token': _('Token is invalid or expired!')}
 
     def validate(self, attrs):
-        print(attrs, '!!!!!!')
         self.token = attrs['refresh']
         return attrs
 
