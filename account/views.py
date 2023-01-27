@@ -8,8 +8,11 @@ from django.contrib.auth import views
 
 from . import serializers
 from .send_mail import send_confirmation_email
+import logging
 
 User = get_user_model()
+
+logger = logging.getLogger('main')
 
 
 class RegistrationView(APIView):
@@ -21,11 +24,15 @@ class RegistrationView(APIView):
             user = serializer.save()
             if user:
                 try:
+                    logger.debug('registration')
                     send_confirmation_email(user.email, user.activation_code)
                 except:
+                    logger.error('registration problems')
                     return Response({'msg': 'Registered but troubles with mail!',
                                      'data': serializer.data}, status=201)
+            logger.error('data problem')
             return Response(serializer.data, status=201)
+        logger.warning('bad request')
         return Response('Bad request!', status=400)
 
 
@@ -38,12 +45,15 @@ class ActivationView(APIView):
             user.is_active = True
             user.activation_code = ''
             user.save()
+            logger.warning('activation')
             return Response({'msg': 'Successfully activated!'}, status=200)
         except User.DoesNotExist:
+            logger.error('link expired')
             return Response({'msg': 'Link expired!'}, status=400)
 
 
 class LoginView(TokenObtainPairView):
+    logger.info('success login')
     permission_classes = (permissions.AllowAny,)
 
 
@@ -54,20 +64,7 @@ class LogoutView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        logger.info('success logout')
         return Response('Successfully logged out!', status=200)
 
 
-class PasswordsChangeView(views.PasswordChangeView):
-    @staticmethod
-    def password_change_done(request):
-        serializer = serializers.RegisterSerializers(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            user = serializer.save()
-            if user:
-                try:
-                    send_confirmation_email(user.email, user.activation_code)
-                except:
-                    return Response({'msg': 'Password changed',
-                                     'data': serializer.data}, status=201)
-            return Response(serializer.data, status=201)
-        return Response('Bad request!', status=400)
