@@ -8,6 +8,7 @@ from rest_framework.response import Response
 
 from favorites.models import Favorites
 from .models import Product
+from likes.models import Like
 from . import serializers
 from product.permissions import IsAuthor
 from rating.models import Rating, RatingStar
@@ -25,7 +26,7 @@ class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all().order_by('?')
     pagination_class = StandartResultPagination
     django_filters = (DjangoFilterBackend, SearchFilter)
-    filterset_fields = ('category', 'stock', 'price', 'owner', 'ratings')
+    filterset_fields = ('category', 'stock', 'price', 'owner')
     search_fields = ('title', 'email', 'username')
 
     def perform_create(self, serializer):
@@ -64,6 +65,22 @@ class ProductViewSet(ModelViewSet):
                 return Response('Deleted from favorites!', status=204)
             logger.error('not found')
             return Response('Product is not found!', status=400)
+
+    @action(['POST', 'DELETE'], detail=True)
+    def like(self, request, pk):
+        product = self.get_object()
+        user = request.user
+        if request.method == 'POST':
+            if user.liked_posts.filter(product=product).exists():
+                return Response('This product is already liked!', status=400)
+            Like.objects.create(owner=user, product=product)
+            return Response('You liked the product!', status=201)
+        else:
+            if not user.liked_posts.filter(product=product).exists():
+                return Response('You didn\'t liked this product!', status=400)
+            user.liked_posts.filter(product=product).delete()
+            return Response('Your like is deleted!', status=204)
+
 
 
 

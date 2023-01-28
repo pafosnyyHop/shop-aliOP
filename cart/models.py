@@ -46,11 +46,14 @@ class Order(models.Model):
     products = models.ManyToManyField('OrderItem', blank=True, related_name='related_order')
     user_comment = models.TextField(blank=True,
                                     null=True)
+    email = models.EmailField('email user', max_length=254)
     name = models.CharField('имя заказчика', max_length=250, null=True)
     last_name = models.CharField('фамилия заказчика', max_length=250, null=True)
     telephone = models.CharField('телефон заказчика', max_length=250, null=True)
     final_price = models.IntegerField(default=1)
     paid = models.BooleanField(default=False)
+    activation_code = models.CharField(max_length=255, blank=True)
+    is_active = models.BooleanField(default=False,)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
