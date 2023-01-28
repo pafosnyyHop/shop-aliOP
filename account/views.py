@@ -7,12 +7,10 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import views
 
 from . import serializers
-<<<<<<< HEAD
+
 from .send_mail import send_confirmation_email
 import logging
-=======
-from .tasks import send_confirmation_email
->>>>>>> b1d2dfd7fb67a7f24f4490d67b409dce320fa7c3
+
 
 User = get_user_model()
 
@@ -28,12 +26,9 @@ class RegistrationView(APIView):
             user = serializer.save()
             if user:
                 try:
-<<<<<<< HEAD
                     logger.debug('registration')
                     send_confirmation_email(user.email, user.activation_code)
-=======
-                    send_confirmation_email.delay(user.email, user.activation_code)
->>>>>>> b1d2dfd7fb67a7f24f4490d67b409dce320fa7c3
+
                 except:
                     logger.error('registration problems')
                     return Response({'msg': 'Registered but troubles with mail!',
@@ -77,11 +72,9 @@ class LogoutView(GenericAPIView):
         return Response('Successfully logged out!', status=200)
 
 
-<<<<<<< HEAD
-=======
 class UserDetailViews(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserDetailSerializer
     permissions_classes = (permissions.IsAuthenticated,)
 
->>>>>>> b1d2dfd7fb67a7f24f4490d67b409dce320fa7c3
+

@@ -8,6 +8,8 @@ from product.permissions import IsAuthor
 
 import logging
 
+logger = logging.getLogger('main')
+
 
 class CustomUpdateDestroyAPIView(mixins.UpdateModelMixin,
                                  mixins.DestroyModelMixin,

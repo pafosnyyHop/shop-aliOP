@@ -5,6 +5,8 @@ from .serializers import CategorySerializer
 
 import logging
 
+logger = logging.getLogger('main')
+
 
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()

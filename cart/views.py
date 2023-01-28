@@ -9,6 +9,8 @@ from .tasks import send_confirmation_email
 
 import logging
 
+logger = logging.getLogger('main')
+
 
 class OrderViewSet(ModelViewSet):
     queryset = Order.objects.all()
@@ -45,8 +47,10 @@ class ActivationView(APIView):
             order.is_active = True
             order.activation_code = ''
             order.save()
+            logger.info('success confirm')
             return Response({'msg': 'Successfully confirmed!'}, status=200)
         except Exception:
+            logger.error('link expired')
             return Response({'msg': 'Link expired!'}, status=400)
 
 

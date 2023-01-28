@@ -15,6 +15,8 @@ from rating.models import Rating, RatingStar
 
 import logging
 
+logger = logging.getLogger('main')
+
 
 class StandartResultPagination(PageNumberPagination):
     page_size = 10

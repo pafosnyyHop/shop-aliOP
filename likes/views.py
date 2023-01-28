@@ -7,6 +7,8 @@ from product.permissions import IsAuthor
 
 import logging
 
+logger = logging.getLogger('main')
+
 
 class LikeCreateView(generics.CreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -19,6 +21,7 @@ class LikeCreateView(generics.CreateAPIView):
 
 class LikeDeleteView(generics.DestroyAPIView):
     queryset = Like.objects.all()
+    logger.warning('only authenticated, author')
     permission_classes = (permissions.IsAuthenticated, IsAuthor)
 
 
