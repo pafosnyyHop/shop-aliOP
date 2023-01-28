@@ -46,6 +46,7 @@ class Order(models.Model):
     products = models.ManyToManyField('OrderItem', blank=True, related_name='related_order')
     user_comment = models.TextField(blank=True,
                                     null=True)
+    email = models.EmailField('email user', max_length=254)
     name = models.CharField('имя заказчика', max_length=250, null=True)
     last_name = models.CharField('фамилия заказчика', max_length=250, null=True)
     telephone = models.CharField('телефон заказчика', max_length=250, null=True)

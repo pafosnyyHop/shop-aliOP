@@ -36,7 +36,7 @@ class ActivationView(APIView):
             user = User.objects.get(activation_code=activation_code)
             print(user)
             user.is_active = True
-            # user.activation_code = ''
+            user.activation_code = ''
             user.save()
             return Response({'msg': 'Successfully activated!'}, status=200)
         except User.DoesNotExist:
