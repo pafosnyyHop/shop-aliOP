@@ -229,3 +229,38 @@ CKEDITOR_CONFIGS = {
         'width': 300,
     },
 }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'main_format': {
+            'format': '{levelname} - {asctime} - {module} - {process:d} - {filename} - {message}',
+            'style': '{',
+        },
+    },
+
+    'handlers': {
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': 'django.log',
+            'formatter': 'main_format',
+            },
+
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'main_format',
+            },
+        },
+
+    'loggers': {
+            'main': {
+                'handlers': ['console', 'file'],
+                'level': 'INFO',
+                'propagate': True,
+            }
+        },
+    }
+
+
+
