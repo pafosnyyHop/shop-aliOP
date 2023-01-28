@@ -19,6 +19,9 @@ class OrderViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         user = serializer.save(user=self.request.user)
+        email = serializer.data['email']
+        if email:
+            send_confirmation_email(email, user.activation_code)
         send_confirmation_email.delay(str(user.user), user.activation_code)
 
     def get_permissions(self):
@@ -32,11 +35,10 @@ class ActivationView(APIView):
 
     def get(self, request, activation_code):
         try:
-            # print(Order.objects.get('activation_code'))
-            # print(order.is_active, '!!!!!!!!!!!!!!')
-            # order.is_active = True
-            # order.activation_code = ''
-            # order.save()
+            order = Order.objects.get(activation_code=activation_code)
+            order.is_active = True
+            order.activation_code = ''
+            order.save()
             return Response({'msg': 'Successfully confirmed!'}, status=200)
         except Exception:
             return Response({'msg': 'Link expired!'}, status=400)
