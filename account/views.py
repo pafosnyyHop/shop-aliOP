@@ -57,7 +57,6 @@ class ActivationView(APIView):
 
 
 class LoginView(TokenObtainPairView):
-    logger.info('success login')
     permission_classes = (permissions.AllowAny,)
 
 
